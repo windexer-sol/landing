@@ -1,0 +1,74 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const sections = [
+  {
+    title: "Introduction",
+    content: "Cypher Indexer is a high-performance, scalable solution for indexing Solana blockchain data. It provides real-time data processing and storage, enabling developers to build powerful applications on top of the Solana ecosystem. Our indexer addresses the challenges of Solana's high-throughput architecture, offering a robust solution for data retrieval and analysis.",
+    icon: "mdi:information-outline"
+  },
+  {
+    title: "Architecture Overview",
+    content: "Cypher Indexer employs a multi-tiered architecture:\n\n1. Data Ingestion Layer: Utilizes Solana's Geyser plugin interface\n2. Processing Layer: Custom-built parallel processing engine\n3. Storage Layer: Google BigTable for primary storage, ClickHouse for analytics\n4. Caching Layer: Redis for high-speed data access\n5. API Layer: GraphQL and REST interfaces for data retrieval\n\nThis design ensures optimal performance, scalability, and flexibility for various use cases.",
+    icon: "mdi:cube-outline"
+  },
+];
+---
+
+<BaseLayout title="Cypher Indexer - Technical Whitepaper">
+  <main class="bg-gray-100 min-h-screen">
+    <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:py-24 lg:px-8">
+      <div class="text-center mb-16">
+        <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">Cypher Indexer</h1>
+        <p class="mt-5 max-w-xl mx-auto text-xl text-gray-500">Advanced Indexing Solution for the Solana Blockchain</p>
+      </div>
+      
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {sections.map((section, index) => (
+          <div class="bg-white overflow-hidden shadow rounded-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer" id={`section-${index}`}>
+            <div class="px-4 py-5 sm:p-6">
+              <div class="flex items-center">
+                <div class="flex-shrink-0">
+                  <iconify-icon icon={section.icon} class="h-6 w-6 text-indigo-600"></iconify-icon>
+                </div>
+                <div class="ml-3">
+                  <h3 class="text-lg font-medium text-gray-900">{section.title}</h3>
+                </div>
+              </div>
+              <div class="mt-4 text-sm text-gray-500 section-content hidden">
+                <p class="whitespace-pre-line">{section.content}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const sections = document.querySelectorAll('[id^="section-"]');
+    sections.forEach(section => {
+      section.addEventListener('click', () => {
+        const content = section.querySelector('.section-content');
+        content.classList.toggle('hidden');
+      });
+    });
+  });
+</script>
+
+<style>
+  .section-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+  }
+
+  .section-content:not(.hidden) {
+    max-height: 1000px;
+    transition: max-height 0.5s ease-in;
+  }
+</style>
