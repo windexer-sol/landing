@@ -4,6 +4,7 @@ import { getCollection } from 'astro:content';
 import { Marked } from 'marked';
 import { markedHighlight } from "marked-highlight";
 import hljs from 'highlight.js';
+import LogoGraphic from "@/components/global/LogoGraphic.astro";
 
 const marked = new Marked(
   markedHighlight({
@@ -30,6 +31,7 @@ for (const entry of sortedContent) {
 ---
 
 <BaseLayout title="Cypher Indexer - Technical Whitepaper">
+  <LogoGraphic />
   <div class="flex">
     <aside class="w-64 h-screen sticky top-0 p-5 bg-gray-50 border-r overflow-y-auto">
       <h2 class="text-lg font-semibold mb-4">Contents</h2>
@@ -45,12 +47,10 @@ for (const entry of sortedContent) {
         </ul>
       </nav>
     </aside>
-
-    <main class="flex-1 p-8 bg-white overflow-y-auto">
+    <main class="flex-1 p-8 overflow-y-auto">
       
       {sortedContent.map((entry) => (
         <section id={entry.slug} class="mb-12">
-          <h2 class="text-3xl font-bold text-gray-900 mb-4">{entry.data.title}</h2>
           <div class="prose prose-lg max-w-none" set:html={entry.Content} />
         </section>
       ))}
@@ -61,11 +61,14 @@ for (const entry of sortedContent) {
 <style is:global>
   @import 'highlight.js/styles/github-dark.css';
   
+  .prose h1 {
+    @apply text-4xl font-bold text-gray-900 mb-4;
+  }
   .prose h2 {
-    @apply text-2xl font-semibold text-gray-800 mt-8 mb-4;
+    @apply text-3xl font-semibold text-gray-800 mt-8 mb-4;
   }
   .prose h3 {
-    @apply text-xl font-medium text-gray-700 mt-6 mb-3;
+    @apply text-2xl font-medium text-gray-700 mt-6 mb-3;
   }
   .prose p {
     @apply text-gray-600 mb-4;
