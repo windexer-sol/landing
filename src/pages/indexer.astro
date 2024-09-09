@@ -1,300 +1,99 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from 'astro:content';
+import { Marked } from 'marked';
+import { markedHighlight } from "marked-highlight";
+import hljs from 'highlight.js';
 
-const sections = [
-  {
-    title: "Introduction",
-    content: `Cypher Indexer is a high-performance, scalable solution for indexing Solana blockchain data. It provides real-time data processing and storage, enabling developers to build powerful applications on top of the Solana ecosystem. Our custom-built indexing engine addresses the challenges of Solana's high-throughput architecture, offering a robust solution for data retrieval and analysis without relying on the Solana Geyser plugin.
+const marked = new Marked(
+  markedHighlight({
+    langPrefix: 'hljs language-',
+    highlight(code, lang) {
+      const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+      return hljs.highlight(code, { language }).value;
+    }
+  })
+);
 
-Key Features:
-- Custom-built data processing and indexing engine
-- Real-time data ingestion and processing
-- Support for custom program indexing
-- High-throughput data handling
-- Flexible query interface
-- Scalable infrastructure
-- IPFS integration for decentralized storage`,
-    icon: "mdi:information-outline"
-  },
-  {
-    title: "Architecture Overview",
-    content: `Cypher Indexer employs a multi-tiered architecture designed for high performance and scalability:
-
-1. Data Ingestion Layer: Custom RPC node integration for real-time blockchain data capture
-2. Processing Layer: Proprietary parallel processing engine optimized for Solana data structures
-3. Indexing Layer: Advanced indexing strategies for efficient data retrieval
-4. Storage Layer: Google BigTable for primary storage, ClickHouse for analytics
-5. Caching Layer: Redis for high-speed data access
-6. API Layer: GraphQL and REST interfaces for flexible data querying
-
-This architecture ensures optimal performance, scalability, and flexibility for various use cases in the Solana ecosystem.`,
-    icon: "mdi:cube-outline"
-  },
-  {
-    title: "Custom Data Ingestion",
-    content: `Our data ingestion layer features a custom-built integration with Solana RPC nodes, allowing us to capture blockchain data in real-time without relying on the Geyser plugin. Key features include:
-
-- Direct RPC node connection for live data streaming
-- Custom protocols for efficient data transfer
-- Intelligent load balancing across multiple RPC nodes
-- Automatic failover and recovery mechanisms
-- Support for historical data backfilling
-- Configurable data filters for targeted ingestion
-
-The ingestion layer is designed to handle Solana's high transaction throughput, capable of processing over 50,000 transactions per second. Our custom buffering system ensures no data loss during processing bottlenecks or network instabilities.`,
-    icon: "mdi:database-import-outline"
-  },
-  {
-    title: "Proprietary Processing Engine",
-    content: `At the core of Cypher Indexer is our proprietary processing engine, specifically designed to handle Solana's unique data structures and high throughput:
-
-- Parallel Processing: Utilizes all available CPU cores for maximum throughput
-- Custom Instruction Parser: Efficiently decodes and normalizes Solana instructions, including CPI calls
-- Adaptive Account Parser: Interprets account data based on known program structures and machine learning-based heuristics
-- Event Extractor: Identifies and normalizes event data from transaction logs
-- State Manager: Maintains real-time account states for quick access and consistency checks
-
-Our processing engine employs a combination of compile-time optimizations for known program structures and runtime adaptability for handling new or updated programs. This approach ensures high performance while maintaining the flexibility to index any Solana program without manual intervention.`,
-    icon: "mdi:cog-outline"
-  },
-  {
-    title: "Advanced Indexing Strategies",
-    content: `Cypher Indexer implements several advanced indexing strategies to ensure fast and efficient data retrieval:
-
-1. Multi-dimensional Indexing:
-   • Combines B-tree and bitmap indexing for optimal query performance
-   • Custom index structures for Solana-specific data types (e.g., public keys, signatures)
-
-2. Program-specific Indexing:
-   • Tailored indexing logic for popular Solana programs (e.g., Serum, Marinade, Metaplex)
-   • Extensible framework for easily adding new program-specific indexers
-
-3. Adaptive Indexing:
-   • Machine learning models to identify and classify account and instruction structures
-   • Automatic index creation and optimization based on query patterns
-
-4. Temporal Indexing:
-   • Efficient storage and querying of time-series data
-   • Support for point-in-time and range queries on historical states
-
-5. Full-text Search:
-   • Indexing of transaction logs and instruction data for complex text-based queries
-   • Integration with Elasticsearch for advanced full-text search capabilities
-
-These indexing strategies enable Cypher Indexer to provide fast and flexible querying capabilities, supporting a wide range of use cases from simple lookups to complex analytical queries.`,
-    icon: "mdi:file-tree-outline"
-  },
-  {
-    title: "Storage Solutions",
-    content: `Cypher Indexer employs a multi-database approach to balance performance, scalability, and analytical capabilities:
-
-1. Google BigTable:
-   • Primary storage for raw and processed blockchain data
-   • Custom row key design for efficient querying of Solana-specific data structures
-   • Multi-regional deployment for high availability and disaster recovery
-   • Automatic sharding for horizontal scalability
-
-2. ClickHouse:
-   • Used for analytical queries and aggregations
-   • Columnar storage enables fast complex queries on large datasets
-   • Custom aggregation functions for blockchain-specific metrics
-   • Distributed query execution for high-performance analytics
-
-3. Redis:
-   • In-memory cache for frequently accessed data
-   • Implements intelligent caching strategies based on access patterns
-   • Supports pub/sub for real-time data updates
-   • Cluster mode for scalability and high availability
-
-4. IPFS Integration:
-   • Decentralized storage for large objects (e.g., NFT metadata, program bytecode)
-   • Content-addressable storage for data integrity and deduplication
-   • Integration with Filecoin for long-term storage guarantees
-
-This multi-tiered storage approach allows Cypher Indexer to efficiently handle diverse query patterns, from high-frequency real-time data access to complex analytical workloads on historical data.`,
-    icon: "mdi:database-outline"
-  },
-  {
-    title: "Query Interface",
-    content: `Cypher Indexer provides both GraphQL and REST APIs for flexible data retrieval:
-
-1. GraphQL API:
-   • Flexible query language allowing clients to request exactly what they need
-   • Support for complex nested queries and relationships
-   • Real-time subscriptions for live data updates
-   • Custom directives for Solana-specific query optimizations
-   • Integrated GraphQL Playground for easy API exploration
-
-2. REST API:
-   • Traditional REST endpoints for simple queries
-   • Bulk data retrieval endpoints for high-volume requests
-   • Streaming endpoints for real-time data feeds
-   • Comprehensive OpenAPI (Swagger) documentation
-
-Both APIs feature:
-- Automatic query optimization and execution plan generation
-- Rate limiting and authentication mechanisms
-- Response caching for improved performance
-- Versioning support for API stability
-- Custom scalar types for Solana-specific data (e.g., public keys, lamports)
-
-Our query interfaces are designed to be developer-friendly while providing the performance and flexibility needed for building sophisticated Solana applications.`,
-    icon: "mdi:api"
-  },
-  {
-    title: "Performance Optimizations",
-    content: `Cypher Indexer incorporates numerous performance optimizations throughout its stack:
-
-1. Data Ingestion:
-   • Zero-copy deserialization of Solana data structures
-   • Asynchronous I/O for network and storage operations
-   • Custom binary protocols for efficient data transfer
-
-2. Processing:
-   • SIMD instructions for parallel data processing
-   • Custom memory allocators for reduced GC pressure
-   • Lock-free data structures for concurrent processing
-
-3. Indexing:
-   • Adaptive indexing based on query patterns
-   • Bloom filters to reduce unnecessary lookups
-   • Incremental index updates for real-time data
-
-4. Storage:
-   • Custom compression algorithms for Solana data types
-   • Intelligent data partitioning and sharding
-   • Write-ahead logging for data consistency and recovery
-
-5. Querying:
-   • Just-in-time query compilation
-   • Adaptive query execution plans
-   • Parallel query execution across multiple nodes
-
-6. Caching:
-   • Multi-level caching strategy (L1: in-process, L2: Redis, L3: CDN)
-   • Predictive prefetching based on access patterns
-   • Cache coherence protocols for distributed deployments
-
-These optimizations enable Cypher Indexer to achieve sub-millisecond query response times for most operations, even under loads exceeding 10,000 queries per second.`,
-    icon: "mdi:speedometer"
-  },
-  {
-    title: "Scalability and Fault Tolerance",
-    content: `Cypher Indexer is designed for horizontal scalability and high availability:
-
-- Stateless Processing Nodes: Allow easy scaling of processing capacity
-- Distributed Storage: BigTable and ClickHouse support horizontal scaling
-- Sharding: Automatic data sharding based on Solana shards
-- Load Balancing: Intelligent request routing based on node capacity and data locality
-- Replication: Multi-region data replication for fault tolerance
-- Consistency: Configurable consistency levels (eventual to strong) for different use cases
-- Failure Detection: Automated health checks and node replacement
-- Data Recovery: Point-in-time recovery capabilities
-
-Our architecture can scale to handle millions of transactions per day with consistent performance. The system is designed to automatically adapt to varying loads and recover from node failures without data loss or significant performance degradation.`,
-    icon: "mdi:server-network"
-  },
-  {
-    title: "Security Considerations",
-    content: `Security is a top priority in Cypher Indexer's design:
-
-- Encryption: All data at rest and in transit is encrypted using industry-standard protocols
-- Access Control: Fine-grained, role-based access control for API endpoints
-- Authentication: Support for multiple authentication methods (API keys, JWT, OAuth)
-- Rate Limiting: Configurable rate limiting to prevent abuse
-- Input Validation: Strict input validation and sanitization to prevent injection attacks
-- Audit Logging: Comprehensive logging of all system actions for traceability
-- Secure Development: Following OWASP guidelines and best practices
-- Regular Audits: Conducted by third-party security firms
-- Vulnerability Management: Continuous vulnerability scanning and prompt patching
-- DDoS Protection: Implemented at network and application levels
-- Secure Key Management: Hardware Security Modules (HSMs) for cryptographic operations
-
-We maintain a dedicated security team and bug bounty program to ensure the ongoing security and integrity of the Cypher Indexer platform.`,
-    icon: "mdi:security"
-  },
-  {
-    title: "Future Developments",
-    content: `We have an ambitious roadmap for Cypher Indexer:
-
-
-1. Advanced Analytics:
-   • Integration with data warehousing solutions for complex analytics
-   • Support for OLAP cubes and multidimensional analysis
-   • Real-time dashboarding and visualization tools
-
-2. Decentralized Indexing:
-   • Exploring decentralized indexing models for increased resilience
-   • Integration with decentralized storage networks beyond IPFS
-
-3. Custom DSL:
-   • Domain-specific language for defining custom indexing logic
-   • Visual programming interface for non-technical users
-
-4. Hardware Acceleration:
-   • GPU acceleration for specific processing tasks
-   • FPGA-based acceleration for high-speed data ingestion
-
-We're committed to staying at the forefront of blockchain indexing technology, continually improving our solution to meet the evolving needs of the Solana ecosystem.`,
-    icon: "mdi:rocket-launch-outline"
-  }
+const indexerContent = await getCollection('indexer');
+const sortOrder = [
+  'introduction', 'architecture', 'capabilities', 
+  'use-cases', 'security', 'roadmap', 'conclusion'
 ];
+const sortedContent = sortOrder.map(slug => 
+  indexerContent.find(entry => entry.slug === slug)
+).filter(Boolean);
+
+for (const entry of sortedContent) {
+  entry.Content = marked.parse(entry.body);
+}
 ---
 
 <BaseLayout title="Cypher Indexer - Technical Whitepaper">
-  <main class="bg-gray-100 min-h-screen">
-    <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:py-24 lg:px-8">
-      <div class="text-center mb-16">
-        <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">Cypher Indexer</h1>
-        <p class="mt-5 max-w-xl mx-auto text-xl text-gray-500">Advanced Indexing Solution for the Solana Blockchain</p>
-      </div>
+  <div class="flex">
+    <aside class="w-64 h-screen sticky top-0 p-5 bg-gray-50 border-r overflow-y-auto">
+      <h2 class="text-lg font-semibold mb-4">Contents</h2>
+      <nav>
+        <ul class="space-y-2">
+          {sortedContent.map((entry) => (
+            <li>
+              <a href={`#${entry.slug}`} class="text-gray-600 hover:text-indigo-600 transition-colors duration-200">
+                {entry.data.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="flex-1 p-8 bg-white overflow-y-auto">
       
-      <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {sections.map((section, index) => (
-          <div class="bg-white overflow-hidden shadow rounded-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer" id={`section-${index}`}>
-            <div class="px-4 py-5 sm:p-6">
-              <div class="flex items-center">
-                <div class="flex-shrink-0">
-                  <iconify-icon icon={section.icon} class="h-6 w-6 text-indigo-600"></iconify-icon>
-                </div>
-                <div class="ml-3">
-                  <h3 class="text-lg font-medium text-gray-900">{section.title}</h3>
-                </div>
-              </div>
-              <div class="mt-4 text-sm text-gray-500 section-content hidden">
-                <p class="whitespace-pre-line">{section.content}</p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </main>
+      {sortedContent.map((entry) => (
+        <section id={entry.slug} class="mb-12">
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">{entry.data.title}</h2>
+          <div class="prose prose-lg max-w-none" set:html={entry.Content} />
+        </section>
+      ))}
+    </main>
+  </div>
 </BaseLayout>
 
-<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+<style is:global>
+  @import 'highlight.js/styles/github-dark.css';
+  
+  .prose h2 {
+    @apply text-2xl font-semibold text-gray-800 mt-8 mb-4;
+  }
+  .prose h3 {
+    @apply text-xl font-medium text-gray-700 mt-6 mb-3;
+  }
+  .prose p {
+    @apply text-gray-600 mb-4;
+  }
+  .prose ul, .prose ol {
+    @apply pl-5 mb-4;
+  }
+  .prose li {
+    @apply mb-2;
+  }
+  .prose a {
+    @apply text-indigo-600 hover:text-indigo-800;
+  }
+  .prose pre {
+    @apply rounded-lg shadow-md p-4 my-4;
+  }
+  .prose code {
+    @apply text-sm bg-gray-100 rounded px-1 py-0.5;
+  }
+</style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const sections = document.querySelectorAll('[id^="section-"]');
-    sections.forEach(section => {
-      section.addEventListener('click', () => {
-        const content = section.querySelector('.section-content');
-        content.classList.toggle('hidden');
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      document.querySelector(this.getAttribute('href')).scrollIntoView({
+        behavior: 'smooth'
       });
     });
   });
 </script>
-
-<style>
-  .section-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
-  }
-
-  .section-content:not(.hidden) {
-    max-height: 2000px; /* Increased to accommodate more content */
-    transition: max-height 1s ease-in;
-  }
-</style>
