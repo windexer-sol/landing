@@ -9,8 +9,8 @@ export default defineConfig({
   content: {
     collections: [
       {
-        name: 'indexer',
-        directory: 'src/content/indexer',
+        name: 'windexer',
+        directory: 'src/content/windexer',
       },
     ],
   },
