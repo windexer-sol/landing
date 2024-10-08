@@ -4,24 +4,28 @@ title: "Introduction"
 
 # Introduction
 
-Cypher Indexer is an advanced, high-performance solution designed to index and process Solana blockchain data at scale. Our system addresses the unique challenges posed by Solana's high-throughput architecture, providing developers with a powerful tool to build sophisticated applications on the Solana ecosystem.
+Cypher Windexer is a high-performance, ZK-compressed Solana indexer with advanced storage and querying capabilities. It's designed to efficiently handle Solana's growing state while providing powerful indexing and analytical features.
 
 ## Key Features
 
-- Real-time data ingestion and processing
-- Custom-built indexing engine optimized for Solana
-- Support for complex custom program indexing
-- Multi-tiered caching for ultra-fast data retrieval
-- Flexible and powerful query interfaces (GraphQL and REST)
-- Horizontal scalability to handle network growth
-- Advanced analytics capabilities
-- Robust security measures and data integrity protocols
+- ZK compression for Solana account data
+- Multi-protocol support: gRPC, RPC polling, and WebSocket subscriptions
+- Advanced binary parsing for accounts and instructions without IDLs
+- Multi-tiered storage solution
+- Real-time processing pipeline with custom parser support
+- Flexible querying through GraphQL and REST APIs
+- WebAssembly (WASM) support for custom indexing logic
 
 ## What Sets Cypher Indexer Apart
 
-1. **Superior Performance:** Ability to handle Solana's high transaction throughput with minimal latency.
-2. **Comprehensive Data Coverage:** Indexing of all on-chain data, including accounts, instructions, and program states.
-3. **Flexible Querying:** Advanced query capabilities allowing for complex data analysis and retrieval.
-4. **Scalability:** Designed to grow seamlessly with the Solana network.
-5. **Real-time Updates:** Live data streaming for up-to-the-second information.
-6. **Developer-friendly:** Extensive documentation, SDKs, and support for easy integration.
+1. **ZK Compression**: Reducing storage requirements while maintaining data integrity.
+
+2. **Decentralized Storage**: Using Filecoin for long-term, decentralized storage, ensuring data persistence and availability.
+
+3. **High-Performance Architecture**: Employs a multi-tiered storage and caching strategy, optimizing for both speed and scalability.
+
+4. **Flexible Parsing**: Supports custom binary parsers for Solana accounts and instructions, allowing for efficient processing of complex data structures.
+
+5. **Advanced Analytics**: Integration with ClickHouse enables powerful analytical capabilities on indexed data.
+
+6. **Customizable Logic**: WebAssembly support allows for the implementation of custom indexing logic without compromising performance.
