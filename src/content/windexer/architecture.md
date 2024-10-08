@@ -4,34 +4,32 @@ title: "System Architecture"
 
 # System Architecture
 
-Cypher Indexer employs a sophisticated multi-tiered architecture designed for high performance, scalability, and reliability:
+Windexer employs a sophisticated multi-tiered architecture designed for high performance, scalability, and reliability:
 
 ## Data Ingestion Layer
 
-- Custom RPC node integration for real-time blockchain data capture
-- Parallel ingestion from multiple Solana nodes for redundancy and performance
-- Intelligent load balancing and failover mechanisms
-- Support for historical data backfilling and data integrity checks
+- **gRPC Client**: Primary method for consuming Solana data streams
+- **RPC Polling Fallback**: Ensures data continuity in case of gRPC interruptions
+- **WebSocket Listener**: Provides real-time updates for specific accounts or programs
 
 ## Processing Layer
 
-- Highly optimized parallel processing engine
-- Custom Solana instruction parser with support for CPI (Cross-Program Invocation)
-- Adaptive account data interpreter using known program structures and heuristics
-- Real-time event extraction and normalization from transaction logs
+- **ZK Compression Engine**: Applies zero-knowledge proofs to compress incoming Solana account data
+- **Binary Parser**: Custom-built parser for efficient processing of Solana account and instruction data
+- **WASM Runtime**: Wasmer-powered environment for executing custom indexing logic
 
 ## Indexing Layer
 
-- Multi-dimensional indexing strategies for diverse query patterns
-- Program-specific indexing for popular Solana programs (e.g., Serum, Metaplex)
-- Adaptive indexing based on query patterns and data access frequency
-- Temporal indexing for efficient historical data queries
+- **Real-time Indexer**: Processes incoming data streams and updates indexes in real-time
+- **Batch Indexer**: Handles historical data indexing and reindexing tasks
+- **Custom Index Builder**: Allows for the creation of specialized indexes based on specific querying needs
 
 ## Storage Layer
 
-- Primary Storage: Google BigTable for high-throughput, low-latency data access
-- Analytical Storage: ClickHouse for complex analytical queries and aggregations
-- Time-series Database: InfluxDB for efficient storage and querying of time-based metrics
+- **Primary Storage**: ScyllaDB for high-throughput data handling and efficient querying
+- **Long-term Storage**: Filecoin for decentralized, persistent data storage
+- **Analytical Storage**: ClickHouse for complex analytical queries and aggregations
+- **Time-series Database**: InfluxDB for efficient storage and querying of time-based metrics
 
 ## Caching Layer
 
