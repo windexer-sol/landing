@@ -1,31 +1,60 @@
 ---
-title: "Introduction"
+title: "Introduction to Windexer"
 ---
 
-# Introduction
+# Decentralized Solana Data Streaming
 
-Cypher Windexer is a high-performance, ZK-compressed Solana indexer with advanced storage and querying capabilities. It's designed to efficiently handle Solana's growing state while providing powerful indexing and analytical features.
+Windexer is a next-generation Solana data streaming engine built on libp2p's gossipsub protocol. It reimagines how blockchain data is captured, propagated, and analyzed through a decentralized peer-to-peer mesh network. By leveraging the power of libp2p's battle-tested protocols and stake-weighted peer selection, Windexer creates a resilient network that captures every transaction, every state change, and every smart contract interaction in real-time.
 
-## Key Features
+## Core Architecture
 
-- ZK compression for Solana account data
-- Multi-protocol support: gRPC, RPC polling, and WebSocket subscriptions
-- Advanced binary parsing for accounts and instructions without IDLs
-- Multi-tiered storage solution
-- Real-time processing pipeline with custom parser support
-- Flexible querying through GraphQL and REST APIs
-- WebAssembly (WASM) support for custom indexing logic
+The heart of Windexer beats through its decentralized mesh network. Unlike traditional centralized indexers, Windexer establishes direct peer connections between validators and data consumers, creating multiple parallel data paths that ensure both speed and reliability. The stake-weighted peer selection mechanism ensures optimal data flow, while the gossip protocol enables sub-200ms global data propagation. This isn't just an improvement – it's a complete paradigm shift in how we handle blockchain data.
 
-## What Sets Cypher Indexer Apart
+## Data Flow and Processing
 
-1. **ZK Compression**: Reducing storage requirements while maintaining data integrity.
+Data flows through Windexer like a force of nature. As validators produce new blocks and state changes, our libp2p mesh network immediately propagates this information across the globe. The network automatically optimizes itself, finding the most efficient paths for data transmission while maintaining multiple redundant routes for reliability. ZK compression kicks in at the processing layer, ensuring efficient state representation without sacrificing completeness.
 
-2. **Decentralized Storage**: Using Filecoin for long-term, decentralized storage, ensuring data persistence and availability.
+## Storage Strategy
 
-3. **High-Performance Architecture**: Employs a multi-tiered storage and caching strategy, optimizing for both speed and scalability.
+We've revolutionized data storage with a hybrid approach that combines lightning-fast access with permanent availability. Real-time data streams through our mesh network, providing instant access to current state, while our Filecoin integration ensures long-term data persistence in a truly decentralized manner. This dual-layer strategy means you'll never have to choose between speed and reliability – you get both by default.
 
-4. **Flexible Parsing**: Supports custom binary parsers for Solana accounts and instructions, allowing for efficient processing of complex data structures.
+## Analytics and Integration
 
-5. **Advanced Analytics**: Integration with ClickHouse enables powerful analytical capabilities on indexed data.
+Windexer isn't just about moving data – it's about making that data sing. Our distributed processing architecture enables real-time analytics that would bring traditional systems to their knees. Integration with ClickHouse allows for powerful analytical queries, while our WebAssembly support means you can implement custom processing logic without sacrificing the performance benefits of our peer-to-peer architecture.
 
-6. **Customizable Logic**: WebAssembly support allows for the implementation of custom indexing logic without compromising performance.
+## API Surface
+
+Whether you're building a DeFi dashboard or analyzing on-chain patterns, Windexer's flexible API surface has you covered. GraphQL and REST endpoints provide familiar access patterns, while our native p2p protocols enable direct mesh network integration for maximum performance. We've designed our APIs to make migration from traditional RPC setups straightforward while opening up new possibilities that weren't feasible before.
+
+## Getting Started
+
+```typescript
+// Connect to the Windexer mesh network
+import { WindexerClient } from '@windexer/client'
+
+const client = new WindexerClient({
+  networkId: 'mainnet',
+  peerId: 'your-peer-id',       // Optional for read-only access
+  gossipConfig: {
+    peerLimit: 10,              // Max number of direct peers
+    propagationDelay: 200       // Target propagation delay in ms
+  }
+})
+
+// Subscribe to real-time account updates
+client.subscribeAccount('Your-Account-Address', (update) => {
+  console.log('New account state:', update)
+})
+
+// Query historical data through GraphQL
+const response = await client.graphql(`
+  query {
+    accountHistory(address: "Your-Account-Address") {
+      timestamp
+      lamports
+      owner
+      data
+    }
+  }
+`)
+```
