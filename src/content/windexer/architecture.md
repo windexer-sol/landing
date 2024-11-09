@@ -4,42 +4,66 @@ title: "System Architecture"
 
 # System Architecture
 
-Windexer employs a sophisticated multi-tiered architecture designed for high performance, scalability, and reliability:
+Windexer reimagines Solana data streaming through a decentralized p2p architecture powered by libp2p's gossipsub protocol. This mesh network approach ensures high performance, resilience, and true decentralization:
 
-## Data Ingestion Layer
+## Network Layer
 
-- **gRPC Client**: Primary method for consuming Solana data streams
-- **RPC Polling Fallback**: Ensures data continuity in case of gRPC interruptions
-- **WebSocket Listener**: Provides real-time updates for specific accounts or programs
+### Peer-to-Peer Mesh
+- **Libp2p Core**: Powers the decentralized network infrastructure
+- **Gossipsub Protocol**: Enables efficient message propagation across the network
+- **Stake-weighted Peer Selection**: Optimizes network topology based on validator stakes
+- **Multi-stream Management**: Handles parallel data streams for different data types
+
+### Network Optimization
+- **Dynamic Topology**: Self-adjusting network connections based on performance
+- **Automatic Peer Discovery**: Uses Kademlia DHT for peer finding and routing
+- **Connection Management**: Intelligent handling of peer connections and disconnections
+- **Message Deduplication**: Efficient handling of redundant messages in the mesh
 
 ## Processing Layer
 
-- **ZK Compression Engine**: Applies zero-knowledge proofs to compress incoming Solana account data
-- **Binary Parser**: Custom-built parser for efficient processing of Solana account and instruction data
-- **WASM Runtime**: Wasmer-powered environment for executing custom indexing logic
+### Real-time Processing
+- **ZK Compression Engine**: Applies zero-knowledge proofs for efficient state representation
+- **Binary Parser**: Custom-built parser for Solana account and instruction data
+- **WASM Runtime**: Wasmer-powered environment for custom processing logic
 
-## Indexing Layer
-
-- **Real-time Indexer**: Processes incoming data streams and updates indexes in real-time
-- **Batch Indexer**: Handles historical data indexing and reindexing tasks
-- **Custom Index Builder**: Allows for the creation of specialized indexes based on specific querying needs
+### Stream Management 
+- **Topic-based Routing**: Efficient message routing based on content type
+- **Flow Control**: Prevents network congestion and ensures smooth data flow
+- **Message Prioritization**: Handles high-priority updates with lower latency
 
 ## Storage Layer
 
-- **Primary Storage**: ScyllaDB for high-throughput data handling and efficient querying
-- **Long-term Storage**: Filecoin for decentralized, persistent data storage
-- **Analytical Storage**: ClickHouse for complex analytical queries and aggregations
-- **Time-series Database**: InfluxDB for efficient storage and querying of time-based metrics
+### Distributed Storage
+- **Real-time Mesh**: Immediate data availability through p2p network
+- **Filecoin Integration**: Decentralized long-term state storage
+- **ClickHouse Analytics**: Powerful analytical capabilities
+- **State Snapshots**: Periodic state snapshots for quick recovery
 
-## Caching Layer
+### Caching Strategy
+- **Mesh-level Cache**: Distributed caching across network nodes
+- **Local Node Cache**: High-speed access for frequent queries
+- **State Sync**: Efficient state synchronization between peers
 
-Multi-level caching strategy using Redis:
-- L1: In-memory cache for hot data
-- L2: Distributed Redis cluster for frequently accessed data
-- L3: Persistent cache for query results and aggregated data
+## Query Layer
 
-## API Layer
-
-- GraphQL API for flexible and efficient querying
-- REST API for traditional access patterns
-- WebSocket support for real-time data subscriptions
+### API Surface
+```typescript
+// Example peer connection setup
+const peerConfig = {
+  // Peer configuration
+  networkId: 'mainnet',
+  minPeers: 4,
+  maxPeers: 12,
+  
+  // Topic subscriptions
+  topics: ['accounts', 'transactions', 'blocks'],
+  
+  // Connection settings
+  connectionLimits: {
+    inbound: 100,
+    outbound: 50,
+    maxTotal: 150
+  }
+}
+```

@@ -4,7 +4,7 @@ title: "Roadmap"
 
 # Roadmap
 
-Our commitment to innovation drives an ambitious roadmap for Cypher Windexer. Here's an overview of our planned developments:
+Our commitment to innovation drives an ambitious roadmap for windexer Windexer. Here's an overview of our planned developments:
 
 ## Short-term Goals (Next 6 months)
 
@@ -54,7 +54,7 @@ Our commitment to innovation drives an ambitious roadmap for Cypher Windexer. He
 
 3. **Ecosystem Integration and Partnerships**
    - Strategic partnerships with major Solana projects
-   - Integration of Cypher Indexer as core infrastructure in the Solana ecosystem
+   - Integration of windexer Indexer as core infrastructure in the Solana ecosystem
    - Collaborative research initiatives with academic institutions
 
 We are committed to staying at the forefront of blockchain indexing technology, continually improving our solution to meet the evolving needs of the Solana ecosystem and beyond.

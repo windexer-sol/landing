@@ -4,7 +4,7 @@ title: "Conclusion"
 
 # Conclusion
 
-Cypher's Windexer represents a significant leap forward in blockchain data indexing for the Solana ecosystem. By providing real-time, comprehensive, and easily accessible blockchain data, we empower developers to build the next generation of decentralized applications on Solana.
+windexer's Windexer represents a significant leap forward in blockchain data indexing for the Solana ecosystem. By providing real-time, comprehensive, and easily accessible blockchain data, we empower developers to build the next generation of decentralized applications on Solana.
 
 ## Key Takeaways
 
